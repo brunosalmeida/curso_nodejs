@@ -1,31 +1,17 @@
 var express = require('express');
 var app = express();
 
-app.get('/', function (req, res) {
-  res.json({'nome':'Curso de NodeJS na Novatec'});
+//Ao usar o require ele procura o arquivo routes.js se não achar procura um diretorio chamado routes com um arquivo index.js
+app.use('/', require('./routes')(app));
+
+
+app.use(function (resquest, response, next) {
+  response.send('Erro 1');
 });
 
-app.get('/products', function (req, res) {
-  res.send('Listando todos os produtos');
-});
-
-app.post('/products', function (req, res) {
-  res.send('Criando um novo produto');
-});
-
-app.get('/products/:id', function (req, res) {
-  var id = req.params.id;		
-  var category = req.query.category;
-
-  res.send('Devolvo um produto específico: ' + id + ' category:' + category + '!');
-});
-
-app.put('/products/:id', function (req, res) {
-  res.send('Atualizando o produto desse ID');
-});
-
-app.delete('/products/:id', function (req, res) {
-  res.send('Excluindo o produto desse ID');
+app.use(function (err,resquest, response, next) {
+  console.log(err);
+  response.send('Erro');
 });
 
 var server = app.listen(3000, function () {
