@@ -1,0 +1,9 @@
+.content-wrapper { top: 15%; }
+
+ul.pure-g { padding: 0; list-style: none; }
+ul.pure-g li { list-style: none; }
+
+/* product */
+.product-price {
+  font-size: 2em;
+}

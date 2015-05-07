@@ -55,14 +55,13 @@ describe('Products Endpoint', function(){
 
 		mongo.collection('products').insert(product, function(err, data){
 			
-			var _id = data._id;
-			var _name = data.name;
+			var _id = data._id; //recupera o id na requisição.
+			var _name = data.name; // recupera o nome na requisição.
 
 			request(app) 
 			.get('/products/' + _id)
 			.end(function(err, response){
 				var result = response.body;
-				console.log(result);
 				assert.equal(result._id, _id);
 				assert.equal(result.name, _name); 
 				done();
@@ -76,37 +75,50 @@ describe('Products Endpoint', function(){
 
 			request(app) 
 			.post('/products')
-			.send(product)
+			.send(product)//envia o novo product criado no body da requisição.
 			.end(function(err, response){
-				var result = response.body;
-				assert.equal(result.name, 'Livro de NodeJs com Express'); 
+				var result = response.body; //recupera a resposta do novo product criado.
+				assert.equal(result.name, 'Livro de NodeJs com Express'); //valida se o nome é igual a 'Livro de NodeJs com Express'.
 				done();
 			});	
 	});
 
-	it.only ('PUT /products/:id |  update a product', function(done){
+	it ('PUT /products/:id |  update a product', function(done){
 		
 		var product = {name: 'Livro NodeJs'  , price: 19.90};
 
 		mongo.collection('products').insert(product, function(err, data){
 						
-			var _id = data._id;
-			var _name = data.name;
+			var _id = data._id; //recupera o id na requisição.
+			var _name = data.name; //recupera o nome na requisição.
 
-			var _new_name = "Livro de NodeJs com Express";
+			var _new_name = "Livro de NodeJs com Express"; //cria um novo nome.
 
 			request(app) 
 			.put('/products/' + _id)
-			.send({name: _new_name})
+			.send({name: _new_name})//passa somente o novo name no body da requisição para ser atualizado.
 			.end(function(err, response){
-				var result = response.body;
-				console.log(result);
+				var result = response.body; //recupera a resposta da requisição.
+				assert.equal(result.updatedExisting, true); //valida se o status do retorno enviado pelo mongo é igual true.
 				done();
 			});
 		})
 	});
 
 	it ('DELETE /products/:id |  delete a product', function(){
-		
+		var product = {name: 'Livro NodeJs'  , price: 19.90};
+
+		mongo.collection('products').insert(product, function(err, data){
+						
+			var _id = data._id;
+			
+			request(app) 
+			.delete('/products/' + _id)
+			.end(function(err, response){
+				var result = response.body;
+				assert.equal(result.n, 1); //valida se o número de objetos deletados no mongodb é igual a 1.
+				done();
+			});
+		})
 	});
 });
